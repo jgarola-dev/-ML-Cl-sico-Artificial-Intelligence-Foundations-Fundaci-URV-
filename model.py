@@ -65,14 +65,14 @@ class DropoutPredictor:
         
         return self.metrics
     
-    def get_feature_importance(self, top_n=10):
+    def get_feature_importance(self, feature_names=None, top_n=10):
         """Retorna las características más importantes"""
         if self.feature_importance is None:
             return None
         
-        if self.feature_names is not None:
+        if feature_names is not None:
             importance_df = pd.DataFrame({
-                'feature': self.feature_names,
+                'feature': feature_names,
                 'importance': self.feature_importance
             }).sort_values('importance', ascending=False)
         else:
@@ -95,11 +95,48 @@ class DropoutPredictor:
         """Retorna las métricas de evaluación"""
         return self.metrics
     
-    def get_recommendation(self, y_pred_proba):
+    def get_recommendation(self, pred, prob=None):
         """Proporciona recomendaciones basadas en predicción"""
-        if y_pred_proba[1] > 0.7:
+        if prob is None:
+            if pred == 1:
+                return "🚨 RIESGO DE ABANDONO DETECTADO"
+            else:
+                return "✅ BAJO RIESGO DE ABANDONO"
+        
+        if prob > 0.7:
             return "🚨 RIESGO ALTO de abandono escolar"
-        elif y_pred_proba[1] > 0.4:
+        elif prob > 0.4:
             return "⚠️ RIESGO MEDIO de abandono escolar"
         else:
             return "✅ BAJO RIESGO de abandono escolar"
+
+
+def compare_models(X_train, X_test, y_train, y_test):
+    """Entrena y compara múltiples modelos"""
+    
+    model_types = [
+        'logistic_regression',
+        'random_forest',
+        'gradient_boosting',
+        'svm'
+    ]
+    
+    results = {}
+    
+    for model_type in model_types:
+        print(f"Entrenando {model_type}...")
+        
+        # Create and train model
+        predictor = DropoutPredictor(model_type=model_type)
+        predictor.train(X_train, y_train)
+        
+        # Evaluate
+        metrics = predictor.evaluate(X_test, y_test)
+        
+        # Store results
+        results[model_type] = {
+            'model': predictor,
+            'metrics': metrics
+        }
+    
+    return results
