@@ -2,6 +2,19 @@
 Streamlit app for student dropout prediction
 """
 
+import sys
+import os
+
+# Añadir el directorio src al path para importar módulos locales
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
+# Ahora sí, importar tus módulos
+from data_preprocessing import prepare_data
+from model import DropoutPredictor
+import pandas as pd
+
 import streamlit as st
 import pandas as pd
 import numpy as np
