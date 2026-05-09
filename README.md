@@ -268,7 +268,7 @@ Este proyecto está bajo la Licencia MIT - ver el archivo LICENSE para detalles.
 
 ## 👨‍💻 Autor
 
-**jgarola-dev**  
+**jgarola-dev / Icobo**  
 Artificial Intelligence Foundations - Fundació URV 2026
 
 ---
